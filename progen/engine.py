@@ -28,7 +28,11 @@ class Progen:
     def runGenerator(self, generator):
         import imp
 
-        gen = imp.load_source(generator, self.gen_path + generator + ".py")
+        try:
+            gen = imp.load_source(generator, self.gen_path + generator + ".py")
+        except FileNotFoundError:
+            print("Generator ({0}) not found".format(generator))
+            exit()
 
         if hasattr(gen, "folders"): # Folders must be a list
             for folder in gen.folders:
