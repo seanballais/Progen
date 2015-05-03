@@ -1,41 +1,43 @@
 # Progen class
 # License under the GPL v3.0
 # Copyright (C) 2015 Sean Francis N. Ballais
-import version
+from os import listdir
+from os.path import isfile, join
+from .version import __version__
+import os
 
 class Progen:
-    def main(arg):
-        # Command line arguments
-        # -h or --help for usage help
-        # -l or --list for listing the generators
-        # -v or --version for listing the version
-        if arg == "-h" or arg == "--help":
-            self.usageHelp()
-        elif arg == "-l" or arg == "--list":
-            self.listGenerators()
-        elif arg == "-v" or arg == "--version":
-            self.version()
-        elif arg != "" and 
-             arg != "-h" or arg != "--help" or
-             arg != "-l" or arg != "--list" or
-             arg != "-v" or arg != "--version":
-            self.runGenerator()
-        else:
-            print("Unknown option or command\n")
-
     def usageHelp(self):
-        print("usage: progen [--version] [--help] [--list] [generator]\n")
-        print("\n\n")
-        print("\t-v or --version\tDisplays the version number of Progen\n")
+        print("usage: progen [--version] [--help] [--list] [generator]")
+        print("\t-v or --version\tDisplays the version number of Progen")
         print("\t-h or --help\tDisplays this help")
-        print("\t-l or --list\tLists the available project generators\n")
-        print("\tgenerator\tAny of the generators available\n")
+        print("\t-l or --list\tLists the available project generators")
+        print("\tgenerator\tAny of the generators available")
 
     def listGenerators(self):
-        pass
+        print("List of available generators:")
+        
+        gen_path = os.path.dirname(os.path.abspath(__file__)) + "/generators"
 
-    def runGenerator(self):
-        pass
+        generators = [gen for gen in listdir(gen_path) if isfile(join(gen_path, gen))]
+
+        for gen in generators:
+            if gen != "__init__.py":
+                print("- {0}\n".format(gen[:-3]))
+
+    def runGenerator(self, generator):
+        try:
+            gen = __import__("generators.%s" % generator, fromlist=["progen.generators"])
+        except ImportError:
+            print("Generator ({0}) not found".format(generator))
+            exit()
+
+        if hasattr(gen, "folders"): # Folders must be a list
+            for folder in gen.folders:
+                os.makedirs(folder)
+            print("Finished creating the project files...")
+        else:
+            gen.main()
 
     def version(self):
-        print("Progen version: {0}\n".format(version.__version__))
+        print("Progen version: {0}".format(__version__))
