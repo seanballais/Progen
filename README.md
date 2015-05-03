@@ -1,7 +1,7 @@
 # Progen
 ## Project Generator
 
-Generate projects easily with a single command(`progen [generator]`). As of v0.0.1a, Progen supports generating C++ projects. More efforts are needed to improve it.
+Generate projects easily with a single command(`python progen.py [generator]`). As of v0.0.1a, Progen supports generating C++ projects. More efforts are needed to improve it.
 
 ### Creating your own generator
 You can create your own project generator that will be utilized by Progen. A generator is simply a python file.    
@@ -20,7 +20,7 @@ folders = [
     
 Just save the code above as a python script (for example, `testscript.py`) inside Progen's generator folder in the installation directory.    
     
-To generate a project based on the specified folders above, just run `progen testscript` inside the terminal.
+To generate a project based on the specified folders above, just run `python progen.py testscript` inside the terminal.
 - **Full Generator**
 This type of generator requires that you be responsible for making the folders. This is useful if you want to create a generator that is interactive and flexible.    
     
